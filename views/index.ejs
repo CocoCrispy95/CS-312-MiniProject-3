@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple space for thoughtful posts.">
+  <title>The Blog Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="The Blog Space home">the blog <span>space</span></a>
+    <div class="header-actions">
+      <p class="header-note">A place for thoughtful posts.</p>
+      <% if (currentUser) { %>
+        <span class="header-user">Hi, <%= currentUser.name %></span>
+        <form action="/logout" method="post"><button class="text-button" type="submit">Sign out</button></form>
+      <% } else { %>
+        <a class="text-button" href="/signin">Sign in</a>
+        <a class="text-button" href="/signup">Create account</a>
+      <% } %>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <p class="eyebrow">Issue no. 01 · Open to everyone</p>
+        <h1 id="page-title">Write something<br><em>worth keeping.</em></h1>
+        <p class="intro-text">A simple corner of the internet for observations, ideas, and stories that deserve a little more room.</p>
+      </div>
+      <div class="intro-mark" aria-hidden="true"><span>✳</span></div>
+    </section>
+
+    <div class="content-grid">
+      <section class="composer-panel" aria-labelledby="composer-title">
+        <% if (currentUser) { %>
+          <div class="section-heading">
+            <p class="eyebrow">Start a new entry</p>
+            <h2 id="composer-title">What’s on your mind?</h2>
+          </div>
+          <% if (error) { %>
+            <p class="alert" role="alert"><%= error %></p>
+          <% } %>
+          <form action="/posts" method="post" class="post-form">
+            <label for="title">Post title</label>
+            <input id="title" name="title" type="text" placeholder="Give it a good headline" value="<%= draft?.title || '' %>" required maxlength="255">
+
+            <label for="content">Your post</label>
+            <textarea id="content" name="content" rows="7" placeholder="Start writing here..." required maxlength="4000"><%= draft?.content || '' %></textarea>
+
+            <button class="button button-primary" type="submit">Publish post <span aria-hidden="true">↗</span></button>
+          </form>
+          <p class="form-footnote">Publishing as <%= currentUser.name %>. Your entries are saved to the blog database.</p>
+        <% } else { %>
+          <div class="section-heading">
+            <p class="eyebrow">Have something to share?</p>
+            <h2 id="composer-title">Join the conversation.</h2>
+          </div>
+          <p class="auth-prompt">Sign in to write a post, or create an account to get started.</p>
+          <a class="button button-primary" href="/signin">Sign in to write <span aria-hidden="true">↗</span></a>
+          <p class="form-footnote"><a href="/signup">Create a free account</a></p>
+        <% } %>
+      </section>
+
+      <section class="feed" aria-labelledby="feed-title">
+        <div class="feed-heading">
+          <div>
+            <p class="eyebrow">The latest entries</p>
+            <h2 id="feed-title">From the community</h2>
+          </div>
+          <span class="post-count"><%= posts.length %> <%= posts.length === 1 ? 'post' : 'posts' %></span>
+        </div>
+
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">
+            <span class="empty-icon" aria-hidden="true">✎</span>
+            <h3>The page is quiet.</h3>
+            <p>Be the first person to leave a note.</p>
+          </div>
+        <% } %>
+
+        <div class="post-list">
+          <% posts.forEach((post, index) => { %>
+            <article class="post-card" style="--delay: <%= index * 80 %>ms">
+              <div class="post-meta">
+                <span class="post-number">0<%= index + 1 %></span>
+                <span><%= post.author %></span>
+                <span class="dot" aria-hidden="true"></span>
+                <time datetime="<%= post.createdAt.toISOString() %>"><%= formatDate(post.createdAt) %></time>
+              </div>
+              <h3><%= post.title %></h3>
+              <p class="post-content"><%= post.content %></p>
+              <div class="post-actions">
+                <% if (currentUser && currentUser.userId === post.creatorUserId) { %>
+                  <a class="text-button" href="/posts/<%= post.id %>/edit">Edit <span aria-hidden="true">↗</span></a>
+                  <form action="/posts/<%= post.id %>/delete" method="post">
+                    <button class="text-button danger" type="submit">Delete <span aria-hidden="true">×</span></button>
+                  </form>
+                <% } %>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>The Blog Space</span>
+    <span>Made for thoughtful posts</span>
+  </footer>
+</body>
+</html>

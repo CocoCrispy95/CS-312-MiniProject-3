@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit post · The Blog Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="The Blog Space home">the blog <span>space</span></a>
+    <div class="header-actions">
+      <span class="header-user">Hi, <%= currentUser.name %></span>
+      <form action="/logout" method="post"><button class="text-button" type="submit">Sign out</button></form>
+    </div>
+  </header>
+
+  <main class="edit-page">
+    <a class="back-link" href="/">← Back to all posts</a>
+    <section class="edit-intro">
+      <p class="eyebrow">Make it sing</p>
+      <h1>Edit your <em>entry.</em></h1>
+      <p>Polish the details, then send your updated thought back into the world.</p>
+    </section>
+
+    <section class="composer-panel edit-panel" aria-labelledby="edit-title">
+      <h2 id="edit-title">Update post</h2>
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p class="alert" role="alert"><%= error %></p>
+      <% } %>
+      <form action="/posts/<%= post.id %>" method="post" class="post-form">
+        <label for="title">Post title</label>
+        <input id="title" name="title" type="text" value="<%= post.title %>" required maxlength="255">
+
+        <label for="content">Your post</label>
+        <textarea id="content" name="content" rows="10" required maxlength="4000"><%= post.content %></textarea>
+
+        <div class="form-actions">
+          <a class="button button-quiet" href="/">Cancel</a>
+          <button class="button button-primary" type="submit">Save changes <span aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>The Blog Space</span>
+    <span>Made for thoughtful posts</span>
+  </footer>
+</body>
+</html>

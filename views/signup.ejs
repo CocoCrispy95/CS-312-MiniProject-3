@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create an account at The Blog Space.">
+  <title>Create account · The Blog Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="The Blog Space home">the blog <span>space</span></a>
+    <a class="text-button" href="/signin">Sign in</a>
+  </header>
+
+  <main class="auth-page">
+    <section class="auth-intro">
+      <p class="eyebrow">A space of your own</p>
+      <h1>Make room for<br><em>your words.</em></h1>
+      <p>Create an account to share stories and ideas with the community.</p>
+    </section>
+    <section class="composer-panel auth-panel" aria-labelledby="signup-title">
+      <h2 id="signup-title">Create your account</h2>
+      <% if (error) { %><p class="alert" role="alert"><%= error %></p><% } %>
+      <form action="/signup" method="post" class="post-form">
+        <label for="user-id">User ID</label>
+        <input id="user-id" name="user_id" type="text" autocomplete="username" value="<%= draft.userId || '' %>" required maxlength="255">
+
+        <label for="name">Your name</label>
+        <input id="name" name="name" type="text" autocomplete="name" value="<%= draft.name || '' %>" required maxlength="255">
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        <p class="form-footnote">Use at least 8 characters. Passwords are stored securely as salted hashes.</p>
+
+        <button class="button button-primary" type="submit">Create account <span aria-hidden="true">↗</span></button>
+      </form>
+      <p class="auth-prompt">Already have an account? <a href="/signin">Sign in</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>The Blog Space</span>
+    <span>Made for thoughtful posts</span>
+  </footer>
+</body>
+</html>
